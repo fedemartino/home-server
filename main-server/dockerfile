@@ -6,7 +6,8 @@ COPY go.mod ./
 
 RUN go mod download
 
-COPY * ./
+COPY *.go ./
+COPY ./html/* ./html/
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o /go-http-main
 

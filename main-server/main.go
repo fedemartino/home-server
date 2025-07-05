@@ -17,7 +17,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	var port = ":8080"
+	var port = ":9090"
 
 	// Serve files from the "static" directory
 	jsFileServer := http.FileServer(http.Dir("./html/js"))

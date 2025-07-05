@@ -21,9 +21,11 @@ func main() {
 
 	// Serve files from the "static" directory
 	jsFileServer := http.FileServer(http.Dir("./html/js"))
+	cssFileServer := http.FileServer(http.Dir("./html/css"))
 	imgFileServer := http.FileServer(http.Dir("./html/img"))
 	http.Handle("/js/", http.StripPrefix("/js/", jsFileServer))
 	http.Handle("/img/", http.StripPrefix("/img/", imgFileServer))
+	http.Handle("/css/", http.StripPrefix("/css/", cssFileServer))
 
 	//handle dynamic urls
 	http.HandleFunc("/", handler)

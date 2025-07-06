@@ -10,10 +10,38 @@ import (
 func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
 }
-func homeHandler(w http.ResponseWriter, r *http.Request) {
+func homeHandler(w http.ResponseWriter) {
 
-	t, _ := template.ParseFiles("html/index.html")
+	fmt.Println("Serving home html")
+	if w == nil {
+		fmt.Println("Responser Writer is nil")
+	} else {
+		fmt.Println("Response writer is NOT nil")
+	}
+	t, err := template.ParseFiles("html/index.html")
+	if err != nil {
+		fmt.Println("Error getting home html")
+		fmt.Println(err.Error())
+	} else {
+		fmt.Println("no error getting template")
+	}
+
 	t.Execute(w, "")
+}
+
+func genericFileHandler(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("Generic file Handler executed")
+	fmt.Println(r.URL.Path)
+	file := r.URL.Path[1:]
+	fmt.Println("requested file", file)
+	if file == "" {
+		fmt.Println("requested path is root /")
+		homeHandler(w)
+	} else {
+		t, _ := template.ParseFiles("html/" + file + ".html")
+		t.Execute(w, "")
+	}
 }
 
 func main() {
@@ -28,8 +56,8 @@ func main() {
 	http.Handle("/css/", http.StripPrefix("/css/", cssFileServer))
 
 	//handle dynamic urls
-	http.HandleFunc("/", handler)
-	http.HandleFunc("/home/", homeHandler)
+	http.HandleFunc("/", genericFileHandler)
+	http.HandleFunc("/message", handler)
 
 	fmt.Println("Listening on http://localhost" + port)
 	log.Fatal(http.ListenAndServe(port, nil))
